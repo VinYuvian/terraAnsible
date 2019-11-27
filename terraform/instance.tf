@@ -28,7 +28,7 @@ resource "aws_instance" "webApp"{
 	subnet_id="${aws_subnet.publicSubnets["10.0.1.0/24"].id}"
 	security_groups=["${aws_security_group.webSG.id}"]
 	instance_type="t2.micro"
-	user_data="${file("user.sh")}"
+	user_data="${file("../user.sh")}"
 	key_name="${aws_key_pair.webKey.key_name}"
 	ami="ami-04b9e92b5572fa0d1"
 	tags={
