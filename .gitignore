@@ -1,3 +1,4 @@
 mainKey
 mainKey.pub
 terraform.tfvars
+.terraform/**

@@ -29,7 +29,7 @@ resource "aws_instance" "webApp"{
 	security_groups=["${aws_security_group.awsSG.id}"]
 	instance_type="t2.micro"
 	user_data="${file("user.sh")}"
-	key_name="${aws_key_pair.webKey.key_name}
+	key_name="${aws_key_pair.webKey.key_name}"
 	tags={
 		Name="webApp"
 	}
