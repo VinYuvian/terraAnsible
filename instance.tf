@@ -36,7 +36,7 @@ resource "aws_instance" "webApp"{
 	}
 
 	provisioner "file"{
-		source="ansibleKey.pub"
+		source="/home/ubuntu/keys/ansibleKey.pub"
 		destination="/home/ansible/.ssh/ansibleKey.pub"
 	}
 
