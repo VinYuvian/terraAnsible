@@ -1,12 +1,12 @@
 resource "aws_key_pair" "webKey"{
 	key_name="webKey"
-	public_key="${var.PUBLIC_WEB_KEY}"
+	public_key="${file("webKey.pub")}"
 }
 
 resource "aws_security_group" "webSG"{
-	vpc_id="${aws_vpc.mainVPC.id}"
-	subnet_id="${aws_subnet.publicSubnets["10.0.1.0/24"]}"
-	igress{
+	#vpc_id="${aws_vpc.mainVPC.id}"
+	#subnet_id="${aws_subnet.publicSubnets["10.0.1.0/24"]}"
+	ingress{
 		from_port=22
 		to_port=22
 		protocol="tcp"
@@ -25,10 +25,11 @@ resource "aws_security_group" "webSG"{
 }
 
 resource "aws_instance" "webApp"{
-	subnet_id="${aws_subnet.publicSubnets["10.0.1.0/24"]}"
-	security_groups=["${aws_security_group.awsSG.id}"]
+	#subnet_id="${aws_subnet.publicSubnets["10.0.1.0/24"]}"
+	security_groups=["${aws_security_group.webSG.name}"]
 	instance_type="t2.micro"
-	user_data="${file("user.sh")}"
+	ami="ami-04b9e92b5572fa0d1"
+	user_data="${file("user_data.sh")}"
 	key_name="${aws_key_pair.webKey.key_name}"
 	tags={
 		Name="webApp"
