@@ -1,7 +1,7 @@
 webKey
 webKey.pub
-*Key
-*Key.pub
+ansibleKey
+ansibleKey.pub
 terraform.tfvars
 .terraform/**
 # Local .terraform directories
