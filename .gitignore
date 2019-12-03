@@ -3,6 +3,8 @@ webKey.pub
 ansibleKey
 ansibleKey.pub
 terraform.tfvars
+.instance.tf.swp
+.ls.swap
 .terraform/**
 # Local .terraform directories
 **/.terraform/*
