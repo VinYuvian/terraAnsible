@@ -34,4 +34,23 @@ resource "aws_instance" "webApp"{
 	tags={
 		Name="webApp"
 	}
+
+	provisioner "file"{
+		source="ansibleKey.pub"
+		destination="/home/ansible/.ssh/ansibleKey.pub"
+	}
+
+	provisioner "remote-exec"{
+		inline=[
+			"cat /home/ansible/.ssh/ansibleKey.pub >> /home/ansible/.ssh/authorized_keys",
+			] 
+		#command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
+	}
+	
+	connection{
+		user="ansible"
+		type="ssh"
+		private_key="${file("webKey")}"
+		host=self.public_ip
+	}
 }
