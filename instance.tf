@@ -1,6 +1,6 @@
 resource "aws_key_pair" "webKey"{
 	key_name="webKey"
-	public_key="${file("webKey.pub")}"
+	public_key="${file("/home/ubuntu/keys/webKey.pub")}"
 }
 
 resource "aws_security_group" "webSG"{
@@ -50,7 +50,7 @@ resource "aws_instance" "webApp"{
 	connection{
 		user="ansible"
 		type="ssh"
-		private_key="${file("webKey")}"
+		private_key="${file("/home/ubuntu/keys/webKey")}"
 		host=self.public_ip
 	}
 }

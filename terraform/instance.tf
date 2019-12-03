@@ -49,7 +49,7 @@ resource "aws_instance" "webApp"{
         connection{
                 user="ansible"
                 type="ssh"
-                private_key="${file("keys/webKey")}"
+                private_key="${file("/home/ubuntu/keys/webKey")}"
                 host=self.public_ip
         }
 }
