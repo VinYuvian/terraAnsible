@@ -1,5 +1,5 @@
-resource "aws_key_pair" "webKey"{
-	key_name="webKey"
+resource "aws_key_pair" "dbKey"{
+	key_name="dbKey"
 	public_key="${file("${var.PUBLIC_WEB_KEY}")}"
 }
 
@@ -29,7 +29,7 @@ resource "aws_instance" "dbInstance"{
 	security_groups=["${aws_security_group.webSG.id}"]
 	instance_type="t2.micro"
 	user_data="${file("../user_data.sh")}"
-	key_name="${aws_key_pair.webKey.key_name}"
+	key_name="${aws_key_pair.dbkey.key_name}"
 	ami="ami-04b9e92b5572fa0d1"
 	tags={
 		Name="dbInstance"
@@ -46,14 +46,14 @@ resource "aws_instance" "dbInstance"{
                 #command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
         }
   provisioner "local-exec"{
-			command="sed '/\[dbservers]\]/i${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory"	
+			command="sed '/\"[dbservers]"\]/i${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory"	
 	}
   
 
   connection{
                 user="ansible"
                 type="ssh"
-                private_key="${file("/home/ubuntu/keys/webKey")}"
+                private_key="${file("/home/ubuntu/keys/dbKey")}"
                 host=self.public_ip
         }
 }
