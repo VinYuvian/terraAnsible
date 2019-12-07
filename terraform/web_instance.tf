@@ -47,7 +47,9 @@ resource "aws_instance" "webApp"{
         }
 	
 	provisioner "local-exec"{
-			command="sed '/\[webservers]\]/i${aws_instance.webApp.public_ip}' ../ansible/ansible-go/inventory"	
+			command=<<EOT
+			sed '/\[webservers]\]/i${aws_instance.webApp.public_ip}' ../ansible/ansible-go/inventory
+	EOT
 	}
 
         connection{

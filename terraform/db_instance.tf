@@ -1,6 +1,6 @@
 resource "aws_key_pair" "dbKey"{
 	key_name="dbKey"
-	public_key="${file("${var.PUBLIC_WEB_KEY}")}"
+	public_key="${file("${var.DB_PUBLIC_KEY}")}"
 }
 
 resource "aws_security_group" "dbSG"{
@@ -25,11 +25,11 @@ resource "aws_security_group" "dbSG"{
 }
 
 resource "aws_instance" "dbInstance"{
-	subnet_id="${aws_subnet.privateSubnets["10.0.1.0/24"].id}"
+	subnet_id="${aws_subnet.privateSubnets["10.0.2.0/24"].id}"
 	security_groups=["${aws_security_group.webSG.id}"]
 	instance_type="t2.micro"
 	user_data="${file("../user_data.sh")}"
-	key_name="${aws_key_pair.dbkey.key_name}"
+	key_name="${aws_key_pair.dbKey.key_name}"
 	ami="ami-04b9e92b5572fa0d1"
 	tags={
 		Name="dbInstance"
@@ -46,7 +46,9 @@ resource "aws_instance" "dbInstance"{
                 #command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
         }
   provisioner "local-exec"{
-			command="sed '/\"[dbservers]"\]/i${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory"	
+			command=<<EOT
+			sed '/\[dbservers\]/a ${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory
+	EOT
 	}
   
 

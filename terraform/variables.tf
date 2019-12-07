@@ -6,6 +6,8 @@ variable "keyname"{
 }
 variable "PUBLIC_KEY_PATH"{}
 
+variable "DB_PUBLIC_KEY"{}
+
 variable "PUBLIC_WEB_KEY"{}
 variable "subnetValues"{
 	type="list"
