@@ -45,6 +45,10 @@ resource "aws_instance" "dbInstance"{
                         ]
                 #command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
         }
+  provisioner "local-exec"{
+			command="sed '/\[dbservers]\]/i${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory"	
+	}
+  
 
   connection{
                 user="ansible"
