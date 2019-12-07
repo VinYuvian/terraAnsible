@@ -13,12 +13,21 @@ resource "aws_security_group" "dbSG"{
 		cidr_blocks=["0.0.0.0/0"]
 
 	}
+	
+	ingress{
+		from_port=22
+		to_port=22
+		protocol="tcp"
+		cidr_blocks=["0.0.0.0/0"]
+
+	}
 	egress{
 		from_port=0
 		to_port=0
 		protocol="-1"
 		cidr_blocks=["0.0.0.0/0"]
 	}
+
 	tags={
 		Name="dbSG"
 	}
@@ -46,9 +55,7 @@ resource "aws_instance" "dbInstance"{
                 #command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
         }
   provisioner "local-exec"{
-			command=<<EOT
-			sed '/\[dbservers\]/a ${aws_instance.dbInstance.private_ip}' ../ansible/ansible-go/inventory
-	EOT
+			command="sed '/\\[dbservers\\]/a ${aws_instance.dbInstance.private_ip}' /home/ubuntu/ansible/ansible-go/inventory"
 	}
   
 
@@ -56,6 +63,6 @@ resource "aws_instance" "dbInstance"{
                 user="ansible"
                 type="ssh"
                 private_key="${file("/home/ubuntu/keys/dbKey")}"
-                host=self.public_ip
+                host=self.private_ip
         }
 }

@@ -1,5 +1,5 @@
 resource "aws_key_pair" "webKey"{
-	key_name="webKey"
+	key_name="webAppKey"
 	public_key="${file("${var.PUBLIC_WEB_KEY}")}"
 }
 
@@ -47,9 +47,7 @@ resource "aws_instance" "webApp"{
         }
 	
 	provisioner "local-exec"{
-			command=<<EOT
-			sed '/\[webservers]\]/i${aws_instance.webApp.public_ip}' ../ansible/ansible-go/inventory
-	EOT
+			command="sed '/\\[webservers]\\]/a ${aws_instance.webApp.public_ip}' /home/ubuntu/ansible/ansible-go/inventory"
 	}
 
         connection{
