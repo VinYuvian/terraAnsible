@@ -47,7 +47,7 @@ resource "aws_instance" "webApp"{
         }
 	
 	provisioner "local-exec"{
-			command="sed '/\\[webservers]\\]/a ${aws_instance.webApp.public_ip}' /home/ubuntu/ansible/ansible-go/inventory"
+			command="/bin/bash inventory.sh '[webservers]' ${self.public_ip}'"
 	}
 
         connection{

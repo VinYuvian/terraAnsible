@@ -34,8 +34,8 @@ resource "aws_security_group" "dbSG"{
 }
 
 resource "aws_instance" "dbInstance"{
-	subnet_id="${aws_subnet.privateSubnets["10.0.2.0/24"].id}"
-	security_groups=["${aws_security_group.webSG.id}"]
+	subnet_id="${aws_subnet.publicSubnets["10.0.3.0/24"].id}"
+	security_groups=["${aws_security_group.dbSG.id}"]
 	instance_type="t2.micro"
 	user_data="${file("../user_data.sh")}"
 	key_name="${aws_key_pair.dbKey.key_name}"
@@ -55,7 +55,7 @@ resource "aws_instance" "dbInstance"{
                 #command="ssh-copy-id -i ansibleKey -o 'IdentityFile webKey.pub' ansible@${aws_instance.webApp.public_ip}"
         }
   provisioner "local-exec"{
-			command="sed '/\\[dbservers\\]/a ${aws_instance.dbInstance.private_ip}' /home/ubuntu/ansible/ansible-go/inventory"
+			command="/bin/bash inventory.sh '[webservers]' '${self.private_ip}'"
 	}
   
 
@@ -63,6 +63,6 @@ resource "aws_instance" "dbInstance"{
                 user="ansible"
                 type="ssh"
                 private_key="${file("/home/ubuntu/keys/dbKey")}"
-                host=self.private_ip
+                host=self.public_ip
         }
 }
